@@ -19,7 +19,7 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
-//    TODO Remove id
+
     @PositiveOrZero
     Integer id;
 

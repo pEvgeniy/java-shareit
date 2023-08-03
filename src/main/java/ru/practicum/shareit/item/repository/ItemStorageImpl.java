@@ -9,7 +9,6 @@ import ru.practicum.shareit.exception.model.WrongHeaderParamException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.repository.InMemoryUserStorage;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
