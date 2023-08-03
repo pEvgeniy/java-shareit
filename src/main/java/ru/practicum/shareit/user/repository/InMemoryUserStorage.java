@@ -23,7 +23,8 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User create(User user) {
         emailExistenceValidationOnCreation(user);
-        user.setId(++uniqId);
+        incrementUniqId();
+        user.setId(uniqId);
         users.put(uniqId, user);
         return user;
     }
@@ -86,5 +87,9 @@ public class InMemoryUserStorage implements UserStorage {
                 .ifPresent(u -> {
                     throw new EmailNotUniqueException(String.format("Email %s already exists", u.getEmail()));
                 });
+    }
+
+    private void incrementUniqId() {
+        uniqId++;
     }
 }

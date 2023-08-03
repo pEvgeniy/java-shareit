@@ -29,7 +29,8 @@ public class ItemStorageImpl implements ItemStorage {
         if (!userStorage.getUsers().containsKey(userId)) {
             throw new EntityNotFoundException(String.format("User with id = %s not found", userId));
         }
-        item.setId(++uniqId);
+        incrementUniqId();
+        item.setId(uniqId);
         item.setRequest(userId);
         items.put(uniqId, item);
         return item;
@@ -99,5 +100,9 @@ public class ItemStorageImpl implements ItemStorage {
     private boolean findTextInItem(Item item, String text) {
         return item.getName().toLowerCase().contains(text)
                 || item.getDescription().toLowerCase().contains(text);
+    }
+
+    private void incrementUniqId() {
+        uniqId++;
     }
 }
