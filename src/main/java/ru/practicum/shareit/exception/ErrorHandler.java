@@ -29,8 +29,7 @@ public class ErrorHandler {
             MethodArgumentNotValidException.class,
             ConstraintViolationException.class,
             HttpMessageNotReadableException.class,
-            MissingRequestHeaderException.class
-    })
+            MissingRequestHeaderException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestExceptions(Exception e) {
         log.error(e.getMessage());

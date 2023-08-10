@@ -13,14 +13,4 @@ public class ShareItApp {
 		SpringApplication.run(ShareItApp.class, args);
 	}
 
-	@Bean
-	public static ItemMapper itemMapper() {
-		return new ItemMapper();
-	}
-
-	@Bean
-	public static UserMapper userMapper() {
-		return new UserMapper();
-	}
-
 }

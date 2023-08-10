@@ -20,18 +20,24 @@ import javax.validation.constraints.PositiveOrZero;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
 
-    @PositiveOrZero
+    public interface Create {
+    }
+
+    public interface Update {
+    }
+
+    @PositiveOrZero(groups = Update.class)
     Integer id;
 
-    @NotBlank
+    @NotBlank(groups = {Create.class, Update.class})
     String name;
 
-    @NotBlank
+    @NotBlank(groups = {Create.class, Update.class})
     String description;
 
-    @NotNull
+    @NotNull(groups = {Create.class, Update.class})
     Boolean available;
 
-    @PositiveOrZero
+    @PositiveOrZero(groups = Update.class)
     Integer request;
 }

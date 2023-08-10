@@ -20,13 +20,19 @@ import javax.validation.constraints.PositiveOrZero;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    @PositiveOrZero
+    public interface Create {
+    }
+
+    public interface Update {
+    }
+
+    @PositiveOrZero(groups = Update.class)
     Integer id;
 
-    @NotBlank
+    @NotBlank(groups = {Create.class, Update.class})
     String name;
 
-    @Email
-    @NotBlank
+    @Email(groups = {Create.class, Update.class})
+    @NotBlank(groups = Create.class)
     String email;
 }
