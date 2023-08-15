@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.validation.Create;
+import ru.practicum.shareit.validation.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,12 +21,6 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
-
-    public interface Create {
-    }
-
-    public interface Update {
-    }
 
     @PositiveOrZero(groups = Update.class)
     Integer id;

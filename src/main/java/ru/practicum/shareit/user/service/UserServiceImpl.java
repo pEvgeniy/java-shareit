@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    UserStorage userStorage;
+    private final UserStorage userStorage;
 
     @Override
     public UserDto create(UserDto userDto) {

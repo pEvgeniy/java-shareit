@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    ItemMapper itemMapper;
+    private final ItemMapper itemMapper;
 
-    ItemStorage itemStorage;
+    private final ItemStorage itemStorage;
 
     @Override
     public ItemDto create(ItemDto itemDto, int userId) {
