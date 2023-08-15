@@ -1,14 +1,15 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.user.model.User;
+import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 @Setter
@@ -16,22 +17,16 @@ import javax.validation.constraints.PositiveOrZero;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class User {
 
     @PositiveOrZero
-    private Integer id;
+    Integer id;
 
     @NotBlank
-    private String name;
+    String name;
 
+    @Email
     @NotBlank
-    private String description;
-
-    @NotNull
-    private Boolean available;
-
-    private User owner;
-
-    @PositiveOrZero
-    private Integer request;
+    String email;
 }
