@@ -1,37 +1,20 @@
 package ru.practicum.shareit.booking.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
 
-public class BookingMapper {
+@Mapper(componentModel = "spring")
+public interface BookingMapper {
 
-    public BookingDto toBookingDto(Booking booking) {
-        return BookingDto.builder()
-                .id(booking.getId())
-                .start(booking.getStart())
-                .end(booking.getEnd())
-                .item(booking.getItem())
-                .booker(booking.getBooker())
-                .status(booking.getStatus())
-                .build();
-    }
+    BookingDto toBookingDto(Booking booking);
 
-    public BookingShortDto toBookingShortDto(Booking booking) {
-        return BookingShortDto.builder()
-                .id(booking.getId())
-                .start(booking.getStart())
-                .end(booking.getEnd())
-                .itemId(booking.getItem().getId())
-                .bookerId(booking.getBooker().getId())
-                .build();
-    }
+    @Mapping(target = "itemId", source = "booking.item.id")
+    @Mapping(target = "bookerId", source = "booking.booker.id")
+    BookingShortDto toBookingShortDto(Booking booking);
 
-    public Booking toBooking(BookingShortDto bookingShortDto) {
-        return Booking.builder()
-                .id(bookingShortDto.getId())
-                .start(bookingShortDto.getStart())
-                .end(bookingShortDto.getEnd())
-                .build();
-    }
+    Booking toBooking(BookingShortDto bookingShortDto);
+
 }
