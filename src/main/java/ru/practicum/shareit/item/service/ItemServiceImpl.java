@@ -100,13 +100,12 @@ public class ItemServiceImpl implements ItemService {
             throw new WrongParamException(String.format("repository. item with owner id = %s not found", userId));
         }
         updateItemFields(item, itemMapper.toItem(itemDto));
-        itemRepository.save(item);
         log.info("repository. item with id={} updated", id);
         return itemMapper.toItemDto(item);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public int deleteById(int id) {
         itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. item with id = %s not found", id)));
@@ -163,14 +162,10 @@ public class ItemServiceImpl implements ItemService {
     private ItemDto setBookingsToItem(ItemDto itemDto) {
         LocalDateTime dateTime = LocalDateTime.now();
 
-        List<Booking> bookingsDesc = bookingRepository.findAllByItem_IdOrderByStartDesc(itemDto.getId())
-                .stream()
-                .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .collect(Collectors.toList());
-        List<Booking> bookingsAsc = bookingRepository.findAllByItem_IdOrderByStartAsc(itemDto.getId())
-                .stream()
-                .filter(b -> b.getStatus().equals(BookingStatus.APPROVED))
-                .collect(Collectors.toList());
+        List<Booking> bookingsDesc =
+                bookingRepository.findAllByItemIdAndStatusOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED);
+        List<Booking> bookingsAsc =
+                bookingRepository.findAllByItemIdAndStatusOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED);
 
         Booking lastBooking = bookingsDesc.stream()
                 .filter(b -> b.getEnd().isBefore(dateTime) || (b.getStart().isBefore(dateTime) && b.getEnd().isAfter(dateTime)))

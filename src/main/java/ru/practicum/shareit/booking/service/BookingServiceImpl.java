@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -38,6 +39,7 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public BookingDto create(BookingShortDto bookingShortDto, int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
@@ -59,10 +61,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> findAllByBooker(String state, int userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
-        List<Booking> bookings = bookingRepository.findBookingByBooker_IdOrderByStartDesc(userId);
+        List<Booking> bookings = bookingRepository.findBookingByBookerIdOrderByStartDesc(userId);
         log.info("repository. booking for user with id={} found", userId);
         return findBookingAccordingToState(bookings, state)
                 .stream()
@@ -71,10 +74,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> findAllByOwner(String state, int ownerId) {
         userRepository.findById(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", ownerId)));
-        List<Booking> bookings = bookingRepository.findBookingByItem_Owner_IdOrderByStartDesc(ownerId);
+        List<Booking> bookings = bookingRepository.findBookingByItemOwnerIdOrderByStartDesc(ownerId);
         log.info("repository. booking for user with id={} found", ownerId);
         return findBookingAccordingToState(bookings, state)
                 .stream()
@@ -83,6 +87,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingDto findById(int id, int userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
@@ -96,6 +101,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto update(boolean isApproved, int id, int userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
@@ -108,12 +114,12 @@ public class BookingServiceImpl implements BookingService {
             throw new ItemUnavailableException(String.format("repository. booking with id = %s is already approved", booking.getId()));
         }
         booking.setStatus(isApproved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
-        bookingRepository.save(booking);
         log.info("repository. booking status with id={} updated to {}", id, booking.getStatus());
         return bookingMapper.toBookingDto(booking);
     }
 
     @Override
+    @Transactional
     public int deleteById(int id) {
         bookingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. booking with id = %s not found", id)));

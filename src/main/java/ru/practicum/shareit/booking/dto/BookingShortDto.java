@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.validation.annotation.StartBeforeEnd;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class BookingShortDto {
     @FutureOrPresent
     private LocalDateTime start;
 
-    @FutureOrPresent
+    @Future
     private LocalDateTime end;
 
     @PositiveOrZero

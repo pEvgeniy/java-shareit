@@ -34,13 +34,13 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Validated(Create.class)
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
-                          @RequestHeader(X_SHARER_USER_ID) int userId) {
+                              @RequestHeader(X_SHARER_USER_ID) int userId) {
         log.info("controller. post. /items. create item request");
         return itemService.createItem(itemDto, userId);
     }

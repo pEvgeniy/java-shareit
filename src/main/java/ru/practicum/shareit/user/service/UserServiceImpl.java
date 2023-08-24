@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.model.EntityNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDto create(UserDto userDto) {
         User user = userRepository.save(userMapper.toUser(userDto));
         log.info("repository. created user with id={}", user.getId());
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         List<User> users = userRepository.findAll();
         log.info("repository. found all users");
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findById(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", id)));
@@ -46,6 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto update(int id, UserDto userDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", id)));
@@ -55,11 +60,11 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
             user.setEmail(userDto.getEmail());
         }
-        User savedUser = userRepository.save(user);
-        return userMapper.toUserDto(savedUser);
+        return userMapper.toUserDto(user);
     }
 
     @Override
+    @Transactional
     public int deleteById(int id) {
         userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", id)));

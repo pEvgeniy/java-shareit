@@ -10,16 +10,16 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findAllByBookerIdAndItemIdAndStatusEqualsAndEndIsBefore(Integer bookerId,
-                                                                              Integer itemId,
-                                                                              BookingStatus status,
-                                                                              LocalDateTime end);
+                                                                          Integer itemId,
+                                                                          BookingStatus status,
+                                                                          LocalDateTime end);
 
-    List<Booking> findBookingByBooker_IdOrderByStartDesc(Integer bookerId);
+    List<Booking> findBookingByBookerIdOrderByStartDesc(Integer bookerId);
 
-    List<Booking> findBookingByItem_Owner_IdOrderByStartDesc(Integer ownerId);
+    List<Booking> findBookingByItemOwnerIdOrderByStartDesc(Integer ownerId);
 
-    List<Booking> findAllByItem_IdOrderByStartAsc(Integer itemId);
+    List<Booking> findAllByItemIdAndStatusOrderByStartAsc(Integer itemId, BookingStatus status);
 
-    List<Booking> findAllByItem_IdOrderByStartDesc(Integer itemId);
+    List<Booking> findAllByItemIdAndStatusOrderByStartDesc(Integer itemId, BookingStatus status);
 
 }

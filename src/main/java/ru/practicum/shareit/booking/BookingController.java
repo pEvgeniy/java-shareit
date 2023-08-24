@@ -23,6 +23,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static ru.practicum.shareit.item.ItemController.X_SHARER_USER_ID;
+
 @Slf4j
 @Validated
 @RestController
@@ -31,8 +33,6 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
-
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,7 +44,7 @@ public class BookingController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingDto> findAllByBooker(@RequestParam(defaultValue = "ALL", required = false) String state,
+    public List<BookingDto> findAllByBooker(@RequestParam(defaultValue = "ALL") String state,
                                             @RequestHeader(X_SHARER_USER_ID) int userId) {
         log.info("controller. get. /bookings. find all booking request");
         return bookingService.findAllByBooker(state, userId);
@@ -52,7 +52,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingDto> findAllByOwner(@RequestParam(defaultValue = "ALL", required = false) String state,
+    public List<BookingDto> findAllByOwner(@RequestParam(defaultValue = "ALL") String state,
                                            @RequestHeader(X_SHARER_USER_ID) int userId) {
         log.info("controller. get. /bookings. find all booking request");
         return bookingService.findAllByOwner(state, userId);
