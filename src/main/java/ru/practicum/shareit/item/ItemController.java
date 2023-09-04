@@ -23,6 +23,8 @@ import ru.practicum.shareit.validation.Create;
 import ru.practicum.shareit.validation.Update;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -47,9 +49,11 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> findAll(@RequestHeader(X_SHARER_USER_ID) int userId) {
+    public List<ItemDto> findAll(@RequestHeader(X_SHARER_USER_ID) int userId,
+                                 @RequestParam(defaultValue = "0") @Valid @PositiveOrZero int from,
+                                 @RequestParam(defaultValue = "10") @Valid @Positive int size) {
         log.info("controller. get. /items. find all items request");
-        return itemService.findAll(userId);
+        return itemService.findAll(userId, from, size);
     }
 
     @GetMapping("/{id}")
@@ -79,9 +83,11 @@ public class ItemController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> search(@RequestParam String text) {
+    public List<ItemDto> search(@RequestParam String text,
+                                @RequestParam(defaultValue = "0") @Valid @PositiveOrZero int from,
+                                @RequestParam(defaultValue = "10") @Valid @Positive int size) {
         log.info("controller. get. /search. find items by text={} request", text);
-        return itemService.search(text);
+        return itemService.search(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

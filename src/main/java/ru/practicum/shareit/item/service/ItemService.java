@@ -10,7 +10,7 @@ public interface ItemService {
 
     ItemDto createItem(ItemDto itemDto, int userId);
 
-    List<ItemDto> findAll(int userId);
+    List<ItemDto> findAll(int userId, int from, int size);
 
     ItemDto findById(int id, int userId);
 
@@ -18,7 +18,7 @@ public interface ItemService {
 
     int deleteById(int id);
 
-    List<ItemDto> search(String text);
+    List<ItemDto> search(String text, int from, int size);
 
     CommentDto createComment(CommentShortDto commentShortDto, int itemId, int userId);
 }

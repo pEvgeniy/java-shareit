@@ -21,6 +21,8 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 import static ru.practicum.shareit.item.ItemController.X_SHARER_USER_ID;
@@ -45,17 +47,21 @@ public class BookingController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> findAllByBooker(@RequestParam(defaultValue = "ALL") String state,
-                                            @RequestHeader(X_SHARER_USER_ID) int userId) {
+                                            @RequestHeader(X_SHARER_USER_ID) int userId,
+                                            @RequestParam(defaultValue = "0") @Valid @PositiveOrZero int from,
+                                            @RequestParam(defaultValue = "10") @Valid @Positive int size) {
         log.info("controller. get. /bookings. find all booking request");
-        return bookingService.findAllByBooker(state, userId);
+        return bookingService.findAllByBooker(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> findAllByOwner(@RequestParam(defaultValue = "ALL") String state,
-                                           @RequestHeader(X_SHARER_USER_ID) int userId) {
+                                           @RequestHeader(X_SHARER_USER_ID) int userId,
+                                           @RequestParam(defaultValue = "0") @Valid @PositiveOrZero int from,
+                                           @RequestParam(defaultValue = "10") @Valid @Positive int size) {
         log.info("controller. get. /bookings. find all booking request");
-        return bookingService.findAllByOwner(state, userId);
+        return bookingService.findAllByOwner(state, userId, from, size);
     }
 
     @GetMapping("/{id}")

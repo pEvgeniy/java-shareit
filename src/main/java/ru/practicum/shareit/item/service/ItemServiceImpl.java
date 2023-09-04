@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -20,6 +21,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -47,6 +49,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final CommentRepository commentRepository;
 
+    private final ItemRequestRepository itemRequestRepository;
+
     @Override
     @Transactional
     public ItemDto createItem(ItemDto itemDto, int userId) {
@@ -54,6 +58,12 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(user);
+        if (itemDto.getRequestId() != null) {
+            item.setRequest(
+                    itemRequestRepository.findById(itemDto.getRequestId())
+                            .orElseThrow(() -> new EntityNotFoundException(String.format("repository. item request with id = %s not found", itemDto.getRequestId())))
+            );
+        }
         itemRepository.save(item);
         log.info("repository. item with id={} created", item.getId());
         return itemMapper.toItemDto(item);
@@ -61,11 +71,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> findAll(int userId) {
+    public List<ItemDto> findAll(int userId, int from, int size) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
+        PageRequest pageRequest = PageRequest.of(from / size, size);
         log.info("repository. item for user with id={} found", userId);
-        return itemRepository.findByOwnerId(userId)
+        return itemRepository.findByOwnerId(userId, pageRequest)
                 .stream()
                 .map(itemMapper::toItemDto)
                 .map(this::setBookingsToItem)
@@ -116,12 +127,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, int from, int size) {
         if (text == null || text.isBlank()) {
             return Collections.emptyList();
         }
+        PageRequest pageRequest = PageRequest.of(from / size, size);
         log.info("repository. searching for items with text={}", text);
-        return itemRepository.searchAvailableItemsByText(text.toLowerCase())
+        return itemRepository.searchAvailableItemsByText(text.toLowerCase(), pageRequest)
                 .stream()
                 .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());

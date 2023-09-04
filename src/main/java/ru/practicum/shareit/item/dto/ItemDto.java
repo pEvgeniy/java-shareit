@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.validation.Create;
 import ru.practicum.shareit.validation.Update;
 
@@ -35,7 +34,7 @@ public class ItemDto {
     private Boolean available;
 
     @PositiveOrZero(groups = Update.class)
-    private ItemRequest request;
+    private Integer requestId;
 
     private BookingShortDto lastBooking;
 

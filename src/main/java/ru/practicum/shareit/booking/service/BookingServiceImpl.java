@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -62,10 +63,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingDto> findAllByBooker(String state, int userId) {
+    public List<BookingDto> findAllByBooker(String state, int userId, int from, int size) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
-        List<Booking> bookings = bookingRepository.findBookingByBookerIdOrderByStartDesc(userId);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingByBookerIdOrderByStartDesc(userId, pageRequest);
         log.info("repository. booking for user with id={} found", userId);
         return findBookingAccordingToState(bookings, state)
                 .stream()
@@ -75,10 +77,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingDto> findAllByOwner(String state, int ownerId) {
+    public List<BookingDto> findAllByOwner(String state, int ownerId, int from, int size) {
         userRepository.findById(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", ownerId)));
-        List<Booking> bookings = bookingRepository.findBookingByItemOwnerIdOrderByStartDesc(ownerId);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingByItemOwnerIdOrderByStartDesc(ownerId, pageRequest);
         log.info("repository. booking for user with id={} found", ownerId);
         return findBookingAccordingToState(bookings, state)
                 .stream()
