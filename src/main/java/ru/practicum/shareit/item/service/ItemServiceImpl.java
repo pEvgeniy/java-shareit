@@ -193,7 +193,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private ItemDto setCommentsToItem(ItemDto itemDto) {
-        itemDto.setComments(commentRepository.findAllByItem_Id(itemDto.getId())
+        itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
                 .stream()
                 .map(commentMapper::toCommentDto)
                 .collect(Collectors.toList()));
