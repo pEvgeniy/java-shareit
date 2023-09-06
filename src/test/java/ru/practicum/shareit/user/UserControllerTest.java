@@ -18,13 +18,11 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
-    private UserDto userDto;
-
     private UserDto createdUser;
 
     @BeforeEach
     void setUp() {
-        userDto = UserDto.builder()
+        UserDto userDto = UserDto.builder()
                 .name("name")
                 .email("user@mail.com")
                 .build();
