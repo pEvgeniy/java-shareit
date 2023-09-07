@@ -32,10 +32,6 @@ class ItemRequestRepositoryTest {
 
     private User user;
 
-    private Item item;
-
-    private ItemRequest itemRequest;
-
     @BeforeEach
     void setUp() {
         user = User.builder()
@@ -43,14 +39,14 @@ class ItemRequestRepositoryTest {
                 .email("user@mail.com")
                 .build();
         userRepository.save(user);
-        itemRequest = ItemRequest.builder()
+        ItemRequest itemRequest = ItemRequest.builder()
                 .id(1)
                 .description("request description")
                 .created(LocalDateTime.now())
                 .requester(user)
                 .build();
         itemRequestRepository.save(itemRequest);
-        item = Item.builder()
+        Item item = Item.builder()
                 .name("item name")
                 .description("description")
                 .available(true)
