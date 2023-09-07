@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,8 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -52,9 +53,9 @@ public class UserServiceImplTest {
 
         UserDto createdUserDto = userService.create(userDto);
 
-        Assertions.assertEquals(createdUserDto.getId(), 1);
-        Assertions.assertEquals(createdUserDto.getName(), userDto.getName());
-        Assertions.assertEquals(createdUserDto.getEmail(), userDto.getEmail());
+        assertEquals(createdUserDto.getId(), 1);
+        assertEquals(createdUserDto.getName(), userDto.getName());
+        assertEquals(createdUserDto.getEmail(), userDto.getEmail());
         Mockito
                 .verify(userRepository).save(user);
     }
@@ -70,8 +71,8 @@ public class UserServiceImplTest {
 
         List<UserDto> allUsers = userService.findAll();
 
-        Assertions.assertEquals(allUsers.size(), 1);
-        Assertions.assertEquals(allUsers.get(0).getName(), user.getName());
+        assertEquals(allUsers.size(), 1);
+        assertEquals(allUsers.get(0).getName(), user.getName());
         Mockito
                 .verify(userRepository).findAll();
     }
@@ -87,9 +88,9 @@ public class UserServiceImplTest {
 
         UserDto foundUserDto = userService.findById(1);
 
-        Assertions.assertEquals(foundUserDto.getId(), user.getId());
-        Assertions.assertEquals(foundUserDto.getName(), user.getName());
-        Assertions.assertEquals(foundUserDto.getEmail(), user.getEmail());
+        assertEquals(foundUserDto.getId(), user.getId());
+        assertEquals(foundUserDto.getName(), user.getName());
+        assertEquals(foundUserDto.getEmail(), user.getEmail());
         Mockito
                 .verify(userRepository).findById(1);
     }
@@ -106,9 +107,9 @@ public class UserServiceImplTest {
 
         UserDto updatedUser = userService.update(1, userDto);
 
-        Assertions.assertEquals(updatedUser.getId(), user.getId());
-        Assertions.assertEquals(updatedUser.getName(), user.getName());
-        Assertions.assertEquals(updatedUser.getEmail(), user.getEmail());
+        assertEquals(updatedUser.getId(), user.getId());
+        assertEquals(updatedUser.getName(), user.getName());
+        assertEquals(updatedUser.getEmail(), user.getEmail());
         Mockito
                 .verify(userRepository).findById(1);
     }
@@ -120,7 +121,7 @@ public class UserServiceImplTest {
                 .thenReturn(Optional.ofNullable(user));
 
         int id = userService.deleteById(1);
-        Assertions.assertEquals(id, 1);
+        assertEquals(id, 1);
         Mockito
                 .verify(userRepository).deleteById(1);
     }

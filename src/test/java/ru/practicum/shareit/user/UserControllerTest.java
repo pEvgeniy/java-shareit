@@ -11,6 +11,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserControllerTest {
@@ -33,26 +35,26 @@ class UserControllerTest {
     void create() {
         UserDto foundUser = userController.findById(createdUser.getId());
 
-        Assertions.assertEquals(createdUser.getId(), foundUser.getId());
-        Assertions.assertEquals(createdUser.getName(), foundUser.getName());
-        Assertions.assertEquals(createdUser.getEmail(), foundUser.getEmail());
+        assertEquals(createdUser.getId(), foundUser.getId());
+        assertEquals(createdUser.getName(), foundUser.getName());
+        assertEquals(createdUser.getEmail(), foundUser.getEmail());
     }
 
     @Test
     void findAll() {
         List<UserDto> foundUsers = userController.findAll();
 
-        Assertions.assertEquals(foundUsers.size(), 1);
-        Assertions.assertEquals(foundUsers.get(0).getId(), createdUser.getId());
+        assertEquals(foundUsers.size(), 1);
+        assertEquals(foundUsers.get(0).getId(), createdUser.getId());
     }
 
     @Test
     void findById() {
         UserDto foundUser = userController.findById(createdUser.getId());
 
-        Assertions.assertEquals(createdUser.getId(), foundUser.getId());
-        Assertions.assertEquals(createdUser.getName(), foundUser.getName());
-        Assertions.assertEquals(createdUser.getEmail(), foundUser.getEmail());
+        assertEquals(createdUser.getId(), foundUser.getId());
+        assertEquals(createdUser.getName(), foundUser.getName());
+        assertEquals(createdUser.getEmail(), foundUser.getEmail());
     }
 
     @Test
@@ -64,9 +66,9 @@ class UserControllerTest {
                         .email("updated@mail.com")
                         .build());
 
-        Assertions.assertEquals(updatedUser.getId(), createdUser.getId());
-        Assertions.assertEquals(updatedUser.getName(), "updated name");
-        Assertions.assertEquals(updatedUser.getEmail(), "updated@mail.com");
+        assertEquals(updatedUser.getId(), createdUser.getId());
+        assertEquals(updatedUser.getName(), "updated name");
+        assertEquals(updatedUser.getEmail(), "updated@mail.com");
     }
 
     @Test
