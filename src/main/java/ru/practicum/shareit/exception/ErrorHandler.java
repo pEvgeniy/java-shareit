@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.model.AccessToEntityDeniedException;
-import ru.practicum.shareit.exception.model.EmailNotUniqueException;
 import ru.practicum.shareit.exception.model.EntityNotFoundException;
 import ru.practicum.shareit.exception.model.ItemUnavailableException;
 import ru.practicum.shareit.exception.model.WrongParamException;
@@ -44,8 +43,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({
-            DataIntegrityViolationException.class,
-            EmailNotUniqueException.class
+            DataIntegrityViolationException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleConflictExceptions(Exception e) {
