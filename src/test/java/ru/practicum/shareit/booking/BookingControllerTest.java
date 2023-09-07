@@ -72,15 +72,57 @@ class BookingControllerTest {
     }
 
     @Test
+    void createWhenUserNotExists() {
+        BookingShortDto bookingShortDto = BookingShortDto.builder()
+                .start(LocalDateTime.now().plusMinutes(10))
+                .end(LocalDateTime.now().plusMinutes(40))
+                .itemId(1)
+                .build();
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.create(bookingShortDto, 99)
+        );
+    }
+
+    @Test
+    void createWhenItemNotExists() {
+        BookingShortDto bookingShortDto = BookingShortDto.builder()
+                .start(LocalDateTime.now().plusMinutes(10))
+                .end(LocalDateTime.now().plusMinutes(40))
+                .itemId(99)
+                .build();
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.create(bookingShortDto, 1)
+        );
+    }
+
+    @Test
     void findAllByBooker() {
         List<BookingDto> foundBooking = bookingController.findAllByBooker("ALL", 2, 0, 10);
         assertEquals(1, foundBooking.size());
     }
 
     @Test
+    void findAllByBookerWhenUserNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.findAllByBooker("ALL", 99, 0, 10)
+        );
+    }
+
+    @Test
     void findAllByOwner() {
         List<BookingDto> foundBooking = bookingController.findAllByOwner("ALL", 1, 0, 10);
         assertEquals(1, foundBooking.size());
+    }
+
+    @Test
+    void findAllByOwnerWhenUserNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.findAllByOwner("ALL", 99, 0, 10)
+        );
     }
 
     @Test
@@ -92,9 +134,33 @@ class BookingControllerTest {
     }
 
     @Test
+    void findByIdWhenUserNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.findById(1, 99)
+        );
+    }
+
+    @Test
     void update() {
         BookingDto updatedUser = bookingController.update(true, 1, 1);
         assertEquals(BookingStatus.APPROVED, updatedUser.getStatus());
+    }
+
+    @Test
+    void updateWhenUserNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.update(true, 1, 99)
+        );
+    }
+
+    @Test
+    void updateWhenBookingNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.update(true, 99, 1)
+        );
     }
 
     @Test
@@ -103,6 +169,14 @@ class BookingControllerTest {
         assertThrows(
                 EntityNotFoundException.class,
                 () -> bookingController.findById(1, 1)
+        );
+    }
+
+    @Test
+    void deleteWhenBookingNotExists() {
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingController.delete(99)
         );
     }
 }

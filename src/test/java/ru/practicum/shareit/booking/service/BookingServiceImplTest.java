@@ -14,6 +14,9 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.model.AccessToEntityDeniedException;
+import ru.practicum.shareit.exception.model.EntityNotFoundException;
+import ru.practicum.shareit.exception.model.ItemUnavailableException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,9 +72,6 @@ class BookingServiceImplTest {
         Mockito
                 .when(bookingRepository.save(any(Booking.class)))
                 .thenReturn(makeBooking(item, booker));
-//        Mockito
-//                .when(bookingMapper.toBookingShortDto(any(Booking.class)))
-//                .thenReturn(makeBookingShortDto());
         Mockito
                 .when(bookingMapper.toBooking(any(BookingShortDto.class)))
                 .thenReturn(makeBooking(item, booker));
@@ -86,7 +87,62 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void findAllByBooker() {
+    void createWhenUserNotExists() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenThrow(EntityNotFoundException.class);
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingService.create(makeBookingShortDto(item.getId()), booker.getId())
+        );
+    }
+
+    @Test
+    void createWhenItemNotExists() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenThrow(EntityNotFoundException.class);
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingService.create(makeBookingShortDto(item.getId()), booker.getId())
+        );
+    }
+
+    @Test
+    void createWhenUserIdEqualsOwnerId() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(booker));
+        Mockito
+                .when(itemRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(item));
+        BookingShortDto bookingShortDto = makeBookingShortDto(item.getId());
+        assertThrows(
+                AccessToEntityDeniedException.class,
+                () -> bookingService.create(bookingShortDto, bookingShortDto.getItemId())
+        );
+    }
+
+    @Test
+    void createWhenItemUnavailable() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(booker));
+        item.setAvailable(false);
+        Mockito
+                .when(itemRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(item));
+        BookingShortDto bookingShortDto = makeBookingShortDto(item.getId());
+        assertThrows(
+                ItemUnavailableException.class,
+                () -> bookingService.create(bookingShortDto, booker.getId())
+        );
+    }
+
+    @Test
+    void findAllByBookerState() {
         Mockito
                 .when(userRepository.findById(booker.getId()))
                 .thenReturn(Optional.ofNullable(booker));
@@ -97,11 +153,39 @@ class BookingServiceImplTest {
                 .when(bookingMapper.toBookingDto(any(Booking.class)))
                 .thenReturn(makeBookingDto(item, booker));
 
-        List<BookingDto> foundBooking = bookingService.findAllByBooker("ALL", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingALL = bookingService.findAllByBooker("ALL", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingCURRENT = bookingService.findAllByBooker("CURRENT", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingWAITING = bookingService.findAllByBooker("WAITING", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingPAST = bookingService.findAllByBooker("PAST", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingFUTURE = bookingService.findAllByBooker("FUTURE", booker.getId(), 0, 10);
+        List<BookingDto> foundBookingREJECTED = bookingService.findAllByBooker("REJECTED", booker.getId(), 0, 10);
 
-        assertEquals(1, foundBooking.size());
-        assertEquals(1, foundBooking.get(0).getItem().getId());
-        assertEquals(2, foundBooking.get(0).getBooker().getId());
+        assertEquals(1, foundBookingALL.size());
+        assertEquals(1, foundBookingALL.get(0).getItem().getId());
+        assertEquals(2, foundBookingALL.get(0).getBooker().getId());
+
+        assertEquals(0, foundBookingCURRENT.size());
+        assertEquals(1, foundBookingWAITING.size());
+        assertEquals(1, foundBookingPAST.size());
+        assertEquals(0, foundBookingFUTURE.size());
+        assertEquals(0, foundBookingREJECTED.size());
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bookingService.findAllByBooker("FAKE", booker.getId(), 0, 10)
+        );
+    }
+
+    @Test
+    void findAllByBookerStateWhenUserNotExists() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenThrow(EntityNotFoundException.class);
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingService.findAllByBooker("ALL", booker.getId(), 0, 10)
+        );
     }
 
     @Test
@@ -124,6 +208,18 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void findAllByOwnerStateWhenUserNotExists() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenThrow(EntityNotFoundException.class);
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingService.findAllByOwner("ALL", booker.getId(), 0, 10)
+        );
+    }
+
+    @Test
     void findById() {
         Mockito
                 .when(userRepository.findById(booker.getId()))
@@ -143,6 +239,35 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void findByIdStateWhenUserNotExists() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenThrow(EntityNotFoundException.class);
+
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> bookingService.findById(1, 2)
+        );
+    }
+
+    @Test
+    void findByIdStateWhenBookerIdEqualsUserId() {
+        Mockito
+                .when(userRepository.findById(booker.getId()))
+                .thenReturn(Optional.ofNullable(booker));
+        Booking booking = makeBooking(item, booker);
+        booking.getBooker().setId(1);
+        Mockito
+                .when(bookingRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(booking));
+
+        assertThrows(
+                AccessToEntityDeniedException.class,
+                () -> bookingService.findById(1, 2)
+        );
+    }
+
+    @Test
     void update() {
         Mockito
                 .when(userRepository.findById(owner.getId()))
@@ -159,6 +284,40 @@ class BookingServiceImplTest {
         assertEquals(1, updatedBooking.getId());
         assertEquals(1, updatedBooking.getItem().getId());
         assertEquals(2, updatedBooking.getBooker().getId());
+    }
+
+    @Test
+    void updateWhenOwnerIdEqualsUserId() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(owner));
+        Booking booking = makeBooking(item, booker);
+        booking.getBooker().setId(1);
+        Mockito
+                .when(bookingRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(booking));
+
+        assertThrows(
+                AccessToEntityDeniedException.class,
+                () -> bookingService.update(true, 1, 2)
+        );
+    }
+
+    @Test
+    void updateWhenStatusAlreadyApproved() {
+        Mockito
+                .when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.ofNullable(owner));
+        Booking booking = makeBooking(item, booker);
+        booking.setStatus(BookingStatus.APPROVED);
+        Mockito
+                .when(bookingRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(booking));
+
+        assertThrows(
+                ItemUnavailableException.class,
+                () -> bookingService.update(true, 1, 1)
+        );
     }
 
     private User makeUser(Integer id, String name) {
