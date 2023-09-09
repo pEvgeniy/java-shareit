@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.item.ItemController.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerWithMockMvcTest {
@@ -86,7 +87,7 @@ class BookingControllerWithMockMvcTest {
         mockMvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingShortDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -101,7 +102,7 @@ class BookingControllerWithMockMvcTest {
                 .thenReturn(List.of(bookingDto));
         mockMvc.perform(get("/bookings")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 2)
+                        .header(X_SHARER_USER_ID, 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -116,7 +117,7 @@ class BookingControllerWithMockMvcTest {
                 .thenReturn(List.of(bookingDto));
         mockMvc.perform(get("/bookings/owner")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 2)
+                        .header(X_SHARER_USER_ID, 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -130,7 +131,7 @@ class BookingControllerWithMockMvcTest {
                 .thenReturn(bookingDto);
         mockMvc.perform(get("/bookings/1")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 2)
+                        .header(X_SHARER_USER_ID, 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -145,7 +146,7 @@ class BookingControllerWithMockMvcTest {
         mockMvc.perform(patch("/bookings/1?approved=true")
                         .content(mapper.writeValueAsString(bookingShortDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 2)
+                        .header(X_SHARER_USER_ID, 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -159,7 +160,7 @@ class BookingControllerWithMockMvcTest {
                 .thenReturn(1);
         mockMvc.perform(MockMvcRequestBuilders.delete("/bookings/1")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 2)
+                        .header(X_SHARER_USER_ID, 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

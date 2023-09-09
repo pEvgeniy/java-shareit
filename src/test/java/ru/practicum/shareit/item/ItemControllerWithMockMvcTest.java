@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.item.ItemController.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = ItemController.class)
 class ItemControllerWithMockMvcTest {
@@ -61,7 +62,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -76,7 +77,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(get("/items")
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -91,7 +92,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(get("/items/1")
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -106,7 +107,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(patch("/items/1")
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -121,7 +122,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(delete("/items/1")
                         .content(mapper.writeValueAsString(1))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -135,7 +136,7 @@ class ItemControllerWithMockMvcTest {
                 .thenReturn(List.of(itemDto));
         mockMvc.perform(get("/items/search?text=тЕкСт")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -159,7 +160,7 @@ class ItemControllerWithMockMvcTest {
         mockMvc.perform(post("/items/1/comment")
                         .content(mapper.writeValueAsString(commentShortDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.request.ItemRequestController.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerWithMockMvcTest {
@@ -55,7 +56,7 @@ class ItemRequestControllerWithMockMvcTest {
         mockMvc.perform(post("/requests")
                         .content(mapper.writeValueAsString(itemRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -69,7 +70,7 @@ class ItemRequestControllerWithMockMvcTest {
                 .thenReturn(List.of(itemRequestDto));
         mockMvc.perform(get("/requests")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -83,7 +84,7 @@ class ItemRequestControllerWithMockMvcTest {
                 .thenReturn(List.of(itemRequestDto));
         mockMvc.perform(get("/requests/all")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -97,7 +98,7 @@ class ItemRequestControllerWithMockMvcTest {
                 .thenReturn(itemRequestDto);
         mockMvc.perform(get("/requests/1")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", 1)
+                        .header(X_SHARER_USER_ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

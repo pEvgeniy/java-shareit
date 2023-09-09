@@ -247,13 +247,8 @@ class ItemControllerTest {
     @Test
     void search() {
         List<ItemDto> foundItems = itemController.search("name", 1, 10);
+        assertItemDtoFields(foundItems.get(0), createdItem.getName());
         assertEquals(foundItems.size(), 1);
-        assertEquals(foundItems.get(0).getId(), createdItem.getId());
-        assertEquals(foundItems.get(0).getName(), createdItem.getName());
-        assertEquals(foundItems.get(0).getDescription(), createdItem.getDescription());
-        assertEquals(foundItems.get(0).getAvailable(), createdItem.getAvailable());
-        assertNull(foundItems.get(0).getComments());
-        assertNull(foundItems.get(0).getNextBooking());
     }
 
     @Test

@@ -60,6 +60,7 @@ class BookingControllerTest {
                 .itemId(1)
                 .build();
         bookingController.create(bookingShortDto, 2);
+
     }
 
     @Test
@@ -73,27 +74,17 @@ class BookingControllerTest {
 
     @Test
     void createWhenUserNotExists() {
-        BookingShortDto bookingShortDto = BookingShortDto.builder()
-                .start(LocalDateTime.now().plusMinutes(10))
-                .end(LocalDateTime.now().plusMinutes(40))
-                .itemId(1)
-                .build();
         assertThrows(
                 EntityNotFoundException.class,
-                () -> bookingController.create(bookingShortDto, 99)
+                () -> bookingController.create(makeBookingShortDto(1), 99)
         );
     }
 
     @Test
     void createWhenItemNotExists() {
-        BookingShortDto bookingShortDto = BookingShortDto.builder()
-                .start(LocalDateTime.now().plusMinutes(10))
-                .end(LocalDateTime.now().plusMinutes(40))
-                .itemId(99)
-                .build();
         assertThrows(
                 EntityNotFoundException.class,
-                () -> bookingController.create(bookingShortDto, 1)
+                () -> bookingController.create(makeBookingShortDto(99), 1)
         );
     }
 
@@ -178,5 +169,13 @@ class BookingControllerTest {
                 EntityNotFoundException.class,
                 () -> bookingController.delete(99)
         );
+    }
+
+    private BookingShortDto makeBookingShortDto(Integer itemId) {
+        return   BookingShortDto.builder()
+                .start(LocalDateTime.now().plusMinutes(10))
+                .end(LocalDateTime.now().plusMinutes(40))
+                .itemId(itemId)
+                .build();
     }
 }
