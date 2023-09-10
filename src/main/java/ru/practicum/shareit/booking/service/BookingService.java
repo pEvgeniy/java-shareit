@@ -9,9 +9,9 @@ public interface BookingService {
 
     BookingDto create(BookingShortDto bookingShortDto, int userId);
 
-    List<BookingDto> findAllByBooker(String state, int userId);
+    List<BookingDto> findAllByBooker(String state, int userId, int from, int size);
 
-    List<BookingDto> findAllByOwner(String state, int userId);
+    List<BookingDto> findAllByOwner(String state, int userId, int from, int size);
 
     BookingDto findById(int id, int userId);
 

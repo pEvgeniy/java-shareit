@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -14,9 +15,9 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                                                                           BookingStatus status,
                                                                           LocalDateTime end);
 
-    List<Booking> findBookingByBookerIdOrderByStartDesc(Integer bookerId);
+    List<Booking> findBookingByBookerIdOrderByStartDesc(Integer bookerId, PageRequest pageRequest);
 
-    List<Booking> findBookingByItemOwnerIdOrderByStartDesc(Integer ownerId);
+    List<Booking> findBookingByItemOwnerIdOrderByStartDesc(Integer ownerId, PageRequest pageRequest);
 
     List<Booking> findAllByItemIdAndStatusOrderByStartAsc(Integer itemId, BookingStatus status);
 
