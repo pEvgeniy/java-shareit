@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("repository. user with id = %s not found", userId)));
         PageRequest pageRequest = PageRequest.of(from / size, size);
         log.info("repository. item for user with id={} found", userId);
-        return itemRepository.findByOwnerId(userId, pageRequest)
+        return itemRepository.findByOwnerIdOrderByIdAsc(userId, pageRequest)
                 .stream()
                 .map(itemMapper::toItemDto)
                 .map(this::setBookingsToItem)

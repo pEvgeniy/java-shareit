@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    List<Item> findByOwnerId(Integer ownerId, PageRequest pageRequest);
+    List<Item> findByOwnerIdOrderByIdAsc(Integer ownerId, PageRequest pageRequest);
 
     List<Item> findByRequestId(Integer requestId);
 

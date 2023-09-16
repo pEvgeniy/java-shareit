@@ -115,7 +115,7 @@ class ItemServiceImplTest {
                 .when(userRepository.findById(1))
                 .thenReturn(Optional.ofNullable(user));
         Mockito
-                .when(itemRepository.findByOwnerId(1, PageRequest.of(0, 10)))
+                .when(itemRepository.findByOwnerIdOrderByIdAsc(1, PageRequest.of(0, 10)))
                 .thenReturn(List.of(item));
         Mockito
                 .when(itemMapper.toItemDto(item))

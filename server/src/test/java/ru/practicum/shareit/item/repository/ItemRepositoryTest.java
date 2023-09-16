@@ -52,7 +52,7 @@ class ItemRepositoryTest {
 
     @Test
     void findByOwnerId() {
-        List<Item> foundItems = itemRepository.findByOwnerId(1, PageRequest.of(0, 10));
+        List<Item> foundItems = itemRepository.findByOwnerIdOrderByIdAsc(1, PageRequest.of(0, 10));
         assertEquals(1, foundItems.size());
     }
 
