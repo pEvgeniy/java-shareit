@@ -14,8 +14,6 @@ import ru.practicum.shareit.exception.model.EntityNotFoundException;
 import ru.practicum.shareit.exception.model.ItemUnavailableException;
 import ru.practicum.shareit.exception.model.WrongParamException;
 
-import javax.validation.ConstraintViolationException;
-
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
@@ -33,7 +31,6 @@ public class ErrorHandler {
     @ExceptionHandler({
             ItemUnavailableException.class,
             MethodArgumentNotValidException.class,
-            ConstraintViolationException.class,
             HttpMessageNotReadableException.class,
             MissingRequestHeaderException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)

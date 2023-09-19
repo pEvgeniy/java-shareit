@@ -1,8 +1,10 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.*;
-
-import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -11,6 +13,5 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class CommentShortDto {
 
-    @NotBlank
     private String text;
 }
